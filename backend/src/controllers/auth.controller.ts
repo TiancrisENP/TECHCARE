@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { CookieOptions, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "../config/db";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
@@ -8,12 +8,12 @@ import { recordAudit } from "../utils/audit";
 
 const REFRESH_COOKIE = "techcare_refresh";
 
-function cookieOptions() {
+function cookieOptions(): CookieOptions {
   const isProd = process.env.NODE_ENV === "production";
   return {
     httpOnly: true,
     secure: isProd,
-    sameSite: (isProd ? "none" : "lax") as const,
+    sameSite: isProd ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/api/auth",
   };
@@ -88,12 +88,7 @@ export async function refresh(req: Request, res: Response) {
 }
 
 export async function logout(_req: Request, res: Response) {
-  res.clearCookie(REFRESH_COOKIE, {
-    path: "/api/auth",
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  });
+  res.clearCookie(REFRESH_COOKIE, cookieOptions());
   res.json({ message: "Sesión cerrada." });
 }
 

@@ -9,11 +9,12 @@ import { recordAudit } from "../utils/audit";
 const REFRESH_COOKIE = "techcare_refresh";
 
 function cookieOptions() {
+  const isProd = process.env.NODE_ENV === "production";
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
+    secure: isProd,
+    sameSite: (isProd ? "none" : "lax") as const,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/api/auth",
   };
 }
@@ -87,7 +88,12 @@ export async function refresh(req: Request, res: Response) {
 }
 
 export async function logout(_req: Request, res: Response) {
-  res.clearCookie(REFRESH_COOKIE, { path: "/api/auth" });
+  res.clearCookie(REFRESH_COOKIE, {
+    path: "/api/auth",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
   res.json({ message: "Sesión cerrada." });
 }
 

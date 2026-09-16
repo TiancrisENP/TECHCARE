@@ -4,8 +4,8 @@ import { createApp } from "./app";
 const PORT = Number(process.env.PORT || 4000);
 const app = createApp();
 
-const server = app.listen(PORT, () => {
-  console.log(`TECHCARE API escuchando en http://localhost:${PORT}`);
+const server = app.listen(PORT, "0.0.0.0", () => {
+  console.log(`TECHCARE API escuchando en el puerto ${PORT}`);
 });
 
 server.on("error", (err: NodeJS.ErrnoException) => {

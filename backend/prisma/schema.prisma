@@ -78,11 +78,13 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  orders     Order[]
-  services   Service[]  @relation("ClienteServices")
-  techJobs   Service[]  @relation("TecnicoServices")
-  warranties Warranty[]
-  auditLogs  AuditLog[]
+  orders         Order[] @relation("OrderCustomer")
+  salesAsSeller  Order[] @relation("OrderSeller")
+  salesAsTech    Order[] @relation("OrderTechnician")
+  services       Service[] @relation("ClienteServices")
+  techJobs       Service[] @relation("TecnicoServices")
+  warranties     Warranty[]
+  auditLogs      AuditLog[]
 
   @@map("users")
 }
@@ -108,7 +110,10 @@ model Product {
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id])
   price       Decimal  @db.Decimal(12, 2)
+  salePrice   Decimal? @db.Decimal(12, 2)
+  minPrice    Decimal? @db.Decimal(12, 2)
   cost        Decimal  @db.Decimal(12, 2)
+  supplier    String?
   stock       Int      @default(0)
   minStock    Int      @default(2)
   imageUrl    String?
@@ -117,6 +122,8 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  images             ProductImage[]
+  variants           ProductVariant[]
   orderItems         OrderItem[]
   inventoryMovements InventoryMovement[]
   warranties         Warranty[]
@@ -124,10 +131,41 @@ model Product {
   @@map("products")
 }
 
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  sortOrder Int     @default(0)
+
+  @@map("product_images")
+}
+
+model ProductVariant {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  sku       String  @unique
+  price     Decimal @db.Decimal(12, 2)
+  salePrice Decimal? @db.Decimal(12, 2)
+  minPrice  Decimal? @db.Decimal(12, 2)
+  stock     Int     @default(0)
+  imageUrl  String?
+  active    Boolean @default(true)
+
+  orderItems         OrderItem[]
+  inventoryMovements InventoryMovement[]
+
+  @@map("product_variants")
+}
+
 model InventoryMovement {
   id        String       @id @default(cuid())
   productId String
   product   Product      @relation(fields: [productId], references: [id])
+  variantId String?
+  variant   ProductVariant? @relation(fields: [variantId], references: [id])
   type      MovementType
   quantity  Int
   reason    String?
@@ -143,10 +181,14 @@ model InventoryMovement {
 model Order {
   id            String        @id @default(cuid())
   customerId    String
-  customer      User          @relation(fields: [customerId], references: [id])
+  customer      User          @relation("OrderCustomer", fields: [customerId], references: [id])
+  sellerId      String
+  seller        User          @relation("OrderSeller", fields: [sellerId], references: [id])
+  technicianId  String?
+  technician    User?         @relation("OrderTechnician", fields: [technicianId], references: [id])
   status        OrderStatus   @default(PENDIENTE)
   total         Decimal       @db.Decimal(12, 2)
-  paymentMethod PaymentMethod @default(MOCK)
+  paymentMethod PaymentMethod @default(CASH)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -163,8 +205,11 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
-  quantity  Int
-  unitPrice Decimal @db.Decimal(12, 2)
+  variantId String?
+  variant   ProductVariant? @relation(fields: [variantId], references: [id])
+  quantity     Int
+  unitPrice    Decimal @db.Decimal(12, 2)
+  serialNumber String?
 
   @@map("order_items")
 }
@@ -264,4 +309,31 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   @@map("audit_logs")
+}
+
+// ---------------------------------------------------------------------
+// SOCIAL / CONTACT BUBBLES
+// ---------------------------------------------------------------------
+
+enum SocialNetwork {
+  WHATSAPP
+  INSTAGRAM
+  FACEBOOK
+  TIKTOK
+  TELEGRAM
+  OTRO
+}
+
+model SocialLink {
+  id        String        @id @default(cuid())
+  network   SocialNetwork
+  label     String
+  url       String
+  iconUrl   String?
+  sortOrder Int           @default(0)
+  active    Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("social_links")
 }

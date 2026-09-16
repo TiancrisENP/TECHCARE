@@ -7,3 +7,6 @@ export const createUserSchema = z.object({
   role: z.enum(["ADMIN", "VENDEDOR", "TECNICO", "CLIENTE"]),
   phone: z.string().optional(),
 });
+
+/** Alta de cliente por staff (técnico/vendedor/admin). El rol siempre es CLIENTE. */
+export const createClienteSchema = createUserSchema.omit({ role: true });

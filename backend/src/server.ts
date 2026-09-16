@@ -1,9 +1,17 @@
 import "dotenv/config";
 import { createApp } from "./app";
 
-const PORT = process.env.PORT || 4000;
+const PORT = Number(process.env.PORT || 4000);
 const app = createApp();
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`TECHCARE API escuchando en http://localhost:${PORT}`);
+});
+
+server.on("error", (err: NodeJS.ErrnoException) => {
+  if (err.code === "EADDRINUSE") {
+    console.error(`Puerto ${PORT} ocupado. Cierra el proceso anterior de npm run dev e inténtalo de nuevo.`);
+    process.exit(1);
+  }
+  throw err;
 });

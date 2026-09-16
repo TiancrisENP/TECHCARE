@@ -5,13 +5,13 @@ import { prisma } from "../config/db";
 import { ApiError } from "../middleware/error.middleware";
 import { recordAudit } from "../utils/audit";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { createUserSchema } from "../validators/user.validator";
+import { createClienteSchema, createUserSchema } from "../validators/user.validator";
 
 const updateRoleSchema = z.object({
   role: z.enum(["ADMIN", "VENDEDOR", "TECNICO", "CLIENTE"]),
 });
 
-const assignableSelect = { id: true, name: true, email: true, role: true, active: true } as const;
+const assignableSelect = { id: true, name: true, email: true, role: true, active: true, phone: true } as const;
 
 export async function listUsers(_req: AuthRequest, res: Response) {
   const users = await prisma.user.findMany({
@@ -55,6 +55,37 @@ export async function createUser(req: AuthRequest, res: Response) {
     entity: "User",
     entityId: user.id,
     details: { role: user.role, email: user.email },
+  });
+
+  res.status(201).json(user);
+}
+
+/** Técnico/vendedor/admin: crea solo cuentas CLIENTE (el cliente atendido en tienda). */
+export async function createCliente(req: AuthRequest, res: Response) {
+  const data = createClienteSchema.parse(req.body);
+  const email = data.email.trim().toLowerCase();
+
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) throw new ApiError(409, "Ya existe una cuenta con este email.");
+
+  const passwordHash = await bcrypt.hash(data.password, 10);
+  const user = await prisma.user.create({
+    data: {
+      name: data.name.trim(),
+      email,
+      passwordHash,
+      phone: data.phone?.trim() || undefined,
+      role: "CLIENTE",
+    },
+    select: { id: true, name: true, email: true, role: true, active: true, phone: true, createdAt: true },
+  });
+
+  await recordAudit({
+    userId: req.user?.sub,
+    action: "CLIENTE_CREATED",
+    entity: "User",
+    entityId: user.id,
+    details: { email: user.email, createdByRole: req.user?.role },
   });
 
   res.status(201).json(user);

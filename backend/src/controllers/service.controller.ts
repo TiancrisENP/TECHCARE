@@ -76,6 +76,7 @@ export async function createService(req: AuthRequest, res: Response) {
   const service = await prisma.service.create({
     data: {
       customerId,
+      technicianId: req.user!.role === "TECNICO" ? req.user!.sub : undefined,
       deviceName: data.deviceName,
       serialNumber: data.serialNumber,
       problem: data.problem,

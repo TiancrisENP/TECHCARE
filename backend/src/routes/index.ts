@@ -7,6 +7,7 @@ import warrantyRoutes from "./warranty.routes";
 import userRoutes from "./user.routes";
 import dashboardRoutes from "./dashboard.routes";
 import auditRoutes from "./audit.routes";
+import socialRoutes from "./social.routes";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use("/warranties", warrantyRoutes);
 router.use("/users", userRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/audit", auditRoutes);
+router.use("/social-links", socialRoutes);
 
 export default router;

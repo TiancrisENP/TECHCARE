@@ -13,6 +13,12 @@ router.get(
   controller.listAssignableUsers
 );
 
+router.post(
+  "/clientes",
+  requireRole("ADMIN", "VENDEDOR", "TECNICO"),
+  controller.createCliente
+);
+
 router.get("/", requireRole("ADMIN"), controller.listUsers);
 router.post("/", requireRole("ADMIN"), controller.createUser);
 router.put("/:id/role", requireRole("ADMIN"), controller.updateUserRole);

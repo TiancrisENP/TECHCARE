@@ -30,6 +30,6 @@ export function requireRole(...allowed: Role[]) {
 export const PERMISSIONS_MATRIX = {
   ADMIN: ["*"],
   VENDEDOR: ["products:write", "orders:write", "customers:write", "inventory:read", "services:read"],
-  TECNICO: ["services:write", "customers:read", "warranties:read", "inventory:read"],
+  TECNICO: ["services:write", "customers:read", "customers:write", "warranties:read", "inventory:read"],
   CLIENTE: ["products:read", "orders:own", "services:own", "warranties:own"],
 } as const;

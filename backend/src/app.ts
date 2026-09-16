@@ -3,14 +3,31 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import routes from "./routes";
+import { catchAsyncErrors } from "./middleware/asyncHandler";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
+
+catchAsyncErrors(routes);
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+].filter(Boolean) as string[];
 
 export function createApp() {
   const app = express();
 
   app.use(
     cors({
-      origin: process.env.FRONTEND_URL || "http://localhost:3000",
+      origin(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+          return;
+        }
+        callback(null, false);
+      },
       credentials: true,
     })
   );

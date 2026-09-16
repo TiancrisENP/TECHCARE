@@ -1,0 +1,58 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Borde perforado real: se usa como separador funcional entre pasos de estado,
+   no como decoración. Cada "diente" representa un paso en el proceso. */
+.perf-divider {
+  background-image: radial-gradient(
+    circle,
+    currentColor 1.6px,
+    transparent 1.8px
+  );
+  background-size: 14px 3px;
+  background-repeat: repeat-x;
+  background-position: center;
+  height: 3px;
+}
+
+.perf-divider-v {
+  background-image: radial-gradient(
+    circle,
+    currentColor 1.6px,
+    transparent 1.8px
+  );
+  background-size: 3px 14px;
+  background-repeat: repeat-y;
+  background-position: center;
+  width: 3px;
+}
+
+/* Ticket: esquina cortada tipo talonario, no border-radius genérico */
+.ticket-notch {
+  clip-path: polygon(
+    0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px)
+  );
+}
+
+:focus-visible {
+  outline: 2px solid #B5652D;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

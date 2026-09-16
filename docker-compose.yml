@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: techcare-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: techcare
+      POSTGRES_PASSWORD: techcare
+      POSTGRES_DB: techcare
+    ports:
+      - "5432:5432"
+    volumes:
+      - techcare_pgdata:/var/lib/postgresql/data
+
+volumes:
+  techcare_pgdata:

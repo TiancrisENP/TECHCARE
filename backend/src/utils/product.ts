@@ -30,6 +30,7 @@ export function serializeProduct(product: {
   cost: Prisma.Decimal | number;
   supplier?: string | null;
   stock: number;
+  minStock?: number;
   images?: { url: string; sortOrder: number; id: string }[];
   variants?: {
     id: string;
@@ -72,6 +73,7 @@ export function serializeProduct(product: {
     cost,
     supplier: product.supplier ?? null,
     stock,
+    minStock: Number(product.minStock ?? 2),
     recommendedPrice: recommendedPrice(price, salePrice),
     effectivePrice: recommendedPrice(price, salePrice),
     floorPrice: floorPrice(minPrice, cost),

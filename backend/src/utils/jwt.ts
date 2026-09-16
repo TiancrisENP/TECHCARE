@@ -12,13 +12,13 @@ const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string;
 
 export function signAccessToken(payload: JwtPayload): string {
   return jwt.sign(payload, ACCESS_SECRET, {
-    expiresIn: process.env.JWT_ACCESS_EXPIRES || "15m",
+    expiresIn: (process.env.JWT_ACCESS_EXPIRES || "15m") as jwt.SignOptions["expiresIn"],
   });
 }
 
 export function signRefreshToken(payload: JwtPayload): string {
   return jwt.sign(payload, REFRESH_SECRET, {
-    expiresIn: process.env.JWT_REFRESH_EXPIRES || "7d",
+    expiresIn: (process.env.JWT_REFRESH_EXPIRES || "7d") as jwt.SignOptions["expiresIn"],
   });
 }
 

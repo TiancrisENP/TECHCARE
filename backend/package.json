@@ -5,13 +5,13 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsc -p tsconfig.json",
-    "start": "prisma migrate deploy && node dist/server.js",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio",
+    "build": "node node_modules/prisma/build/index.js generate && node node_modules/typescript/bin/tsc -p tsconfig.json",
+    "start": "node node_modules/prisma/build/index.js migrate deploy && node dist/server.js",
+    "prisma:generate": "node node_modules/prisma/build/index.js generate",
+    "prisma:migrate": "node node_modules/prisma/build/index.js migrate dev",
+    "prisma:studio": "node node_modules/prisma/build/index.js studio",
     "seed": "tsx prisma/seed.ts",
-    "render:build": "prisma generate && tsc -p tsconfig.json"
+    "render:build": "node node_modules/prisma/build/index.js generate && node node_modules/typescript/bin/tsc -p tsconfig.json"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
@@ -23,7 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "prisma": "^5.22.0",
-    "typescript": "^5.5.3",
+    "typescript": "5.5.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -37,6 +37,6 @@
     "tsx": "^4.16.2"
   },
   "engines": {
-    "node": ">=20"
+    "node": "20.x"
   }
 }

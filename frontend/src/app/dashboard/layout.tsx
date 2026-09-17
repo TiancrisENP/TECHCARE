@@ -40,7 +40,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen grid grid-cols-[220px,1fr] bg-steel-100">
       <aside className="bg-graphite text-aluminum flex flex-col">
         <div className="px-6 py-6 border-b border-white/10">
-          <p className="font-display text-xl">TECHCARE</p>
+          <Link href="/" className="font-display text-xl hover:text-copper-light">
+            TECHCARE
+          </Link>
           <p className="font-mono text-xs text-copper-light mt-1">{user.role}</p>
         </div>
         <nav className="flex-1 py-4">
@@ -61,9 +63,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             );
           })}
         </nav>
-        <button onClick={logout} className="px-6 py-4 text-sm text-left border-t border-white/10 text-aluminum/70 hover:text-white">
-          Cerrar sesión
-        </button>
+        <div className="border-t border-white/10">
+          <Link href="/" className="block px-6 py-3 text-sm text-copper-light hover:text-white">
+            ← Página principal
+          </Link>
+          <button onClick={logout} className="w-full px-6 py-4 text-sm text-left border-t border-white/10 text-aluminum/70 hover:text-white">
+            Cerrar sesión
+          </button>
+        </div>
       </aside>
       <main className="p-8">{children}</main>
     </div>

@@ -1,12 +1,8 @@
-import { createRequire } from "node:module";
-import { RequestHandler, Router } from "express";
+import express, { RequestHandler, Router } from "express";
 
-const require = createRequire(__filename);
-const Layer = require("express/lib/router/layer") as {
-  prototype: {
-    handle_request: (req: unknown, res: unknown, next: (err?: unknown) => void) => void;
-    __techcarePatched?: boolean;
-  };
+type LayerProto = {
+  handle_request: (req: unknown, res: unknown, next: (err?: unknown) => void) => void;
+  __techcarePatched?: boolean;
 };
 
 /**
@@ -14,8 +10,11 @@ const Layer = require("express/lib/router/layer") as {
  * Sin esto, un ApiError tumba el proceso y el frontend ve fallos / 404.
  */
 export function patchExpressAsyncErrors() {
-  const proto = Layer.prototype;
-  if (proto.__techcarePatched) return;
+  const probe = express.Router();
+  probe.use((_req, _res, next) => next());
+  const layer = (probe as unknown as { stack: object[] }).stack[0];
+  const proto = Object.getPrototypeOf(layer) as LayerProto;
+  if (!proto || proto.__techcarePatched) return;
   proto.__techcarePatched = true;
 
   proto.handle_request = function handle_request(req, res, next) {

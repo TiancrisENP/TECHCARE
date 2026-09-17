@@ -10,6 +10,26 @@ export interface User {
   createdAt?: string;
 }
 
+export interface ProductImage {
+  id: string;
+  url: string;
+  sortOrder: number;
+}
+
+export interface ProductVariant {
+  id: string;
+  name: string;
+  sku: string;
+  price: number;
+  salePrice?: number | null;
+  minPrice?: number | null;
+  stock: number;
+  imageUrl?: string | null;
+  active: boolean;
+  recommendedPrice?: number;
+  effectivePrice?: number;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -17,9 +37,19 @@ export interface Product {
   description?: string;
   brand?: string;
   price: number;
+  salePrice?: number | null;
+  minPrice?: number | null;
+  cost?: number;
+  supplier?: string | null;
   stock: number;
   minStock: number;
   imageUrl?: string;
+  images?: ProductImage[];
+  variants?: ProductVariant[];
+  recommendedPrice?: number;
+  effectivePrice?: number;
+  floorPrice?: number;
+  warrantyMonths?: number;
   active: boolean;
 }
 
@@ -64,8 +94,10 @@ export type OrderStatus = "PENDIENTE" | "PAGADO" | "ENVIADO" | "ENTREGADO" | "CA
 export interface OrderItem {
   id: string;
   productId: string;
+  variantId?: string;
   quantity: number;
   unitPrice: number;
+  serialNumber?: string;
   product?: Product;
 }
 
@@ -76,7 +108,21 @@ export interface Order {
   paymentMethod: "CASH" | "CARD" | "TRANSFER" | "MOCK";
   createdAt: string;
   customer?: User;
+  seller?: User;
+  technician?: User;
   items: OrderItem[];
+}
+
+export type SocialNetwork = "WHATSAPP" | "INSTAGRAM" | "FACEBOOK" | "TIKTOK" | "TELEGRAM" | "OTRO";
+
+export interface SocialLink {
+  id: string;
+  network: SocialNetwork;
+  label: string;
+  url: string;
+  iconUrl?: string | null;
+  sortOrder: number;
+  active: boolean;
 }
 
 export interface AuditLog {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo, Work_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { SocialBubbles } from "@/components/SocialBubbles";
 
 const display = Archivo({
   subsets: ["latin"],
@@ -31,7 +32,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <body className={`${display.variable} ${body.variable} ${mono.variable} font-body bg-aluminum text-ink`}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <SocialBubbles />
+        </AuthProvider>
       </body>
     </html>
   );

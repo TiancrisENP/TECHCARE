@@ -20,9 +20,16 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      router.push("/");
-    } catch {
-      setError("Email o contraseña incorrectos.");
+      router.push("/dashboard");
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { status?: number; data?: { message?: string } }; code?: string };
+      if (!axiosErr.response) {
+        setError("No hay conexión con el API. Arranca el backend en el puerto 4000.");
+      } else if (axiosErr.response.status === 404) {
+        setError("El API no tiene la ruta de login. Reinicia el backend.");
+      } else {
+        setError(axiosErr.response.data?.message || "Email o contraseña incorrectos.");
+      }
     } finally {
       setLoading(false);
     }

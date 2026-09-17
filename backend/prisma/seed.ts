@@ -7,7 +7,7 @@ async function main() {
   const adminPassword = await bcrypt.hash("Admin123!", 10);
   const admin = await prisma.user.upsert({
     where: { email: "admin@techcare.com" },
-    update: {},
+    update: { passwordHash: adminPassword, role: "ADMIN", active: true },
     create: {
       name: "Administrador TECHCARE",
       email: "admin@techcare.com",
@@ -19,7 +19,7 @@ async function main() {
   const tecnicoPassword = await bcrypt.hash("Tecnico123!", 10);
   await prisma.user.upsert({
     where: { email: "cristian@techcare.com" },
-    update: {},
+    update: { passwordHash: tecnicoPassword, role: "TECNICO", active: true },
     create: {
       name: "Cristian",
       email: "cristian@techcare.com",
@@ -31,7 +31,7 @@ async function main() {
   const vendedorPassword = await bcrypt.hash("Vendedor123!", 10);
   await prisma.user.upsert({
     where: { email: "vendedor@techcare.com" },
-    update: {},
+    update: { passwordHash: vendedorPassword, role: "VENDEDOR", active: true },
     create: {
       name: "Laura Vendedora",
       email: "vendedor@techcare.com",

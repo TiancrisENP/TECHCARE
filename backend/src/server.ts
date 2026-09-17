@@ -1,6 +1,14 @@
 import "dotenv/config";
 import { createApp } from "./app";
 
+process.on("unhandledRejection", (err) => {
+  console.error("unhandledRejection (el API sigue activo):", err);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("uncaughtException:", err);
+});
+
 const PORT = Number(process.env.PORT || 4000);
 const app = createApp();
 

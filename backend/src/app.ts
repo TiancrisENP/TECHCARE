@@ -3,10 +3,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import routes from "./routes";
-import { catchAsyncErrors } from "./middleware/asyncHandler";
+import { patchExpressAsyncErrors } from "./middleware/asyncHandler";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
 
-catchAsyncErrors(routes);
+patchExpressAsyncErrors();
 
 const allowedOrigins = [
   ...(process.env.FRONTEND_URL || "")

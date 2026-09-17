@@ -23,11 +23,15 @@ api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
+    const url = String(original?.url || "");
+    const isAuthCall = url.includes("/auth/login") || url.includes("/auth/register") || url.includes("/auth/refresh");
+
+    if (error.response?.status === 401 && original && !original._retry && !isAuthCall) {
       original._retry = true;
       try {
         const { data } = await api.post("/auth/refresh");
         setAccessToken(data.accessToken);
+        original.headers = original.headers || {};
         original.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(original);
       } catch {

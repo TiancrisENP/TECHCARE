@@ -8,16 +8,33 @@ import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
 
 patchExpressAsyncErrors();
 
+function normalizeOrigin(origin: string) {
+  return origin.trim().replace(/\/+$/, "");
+}
+
 const allowedOrigins = [
   ...(process.env.FRONTEND_URL || "")
     .split(",")
-    .map((origin) => origin.trim())
+    .map(normalizeOrigin)
     .filter(Boolean),
   "http://localhost:3000",
   "http://localhost:3001",
   "http://127.0.0.1:3000",
   "http://127.0.0.1:3001",
+  "https://techcare-tawny.vercel.app",
 ];
+
+function isAllowedOrigin(origin?: string) {
+  if (!origin) return true;
+  const normalized = normalizeOrigin(origin);
+  if (allowedOrigins.includes(normalized)) return true;
+  try {
+    const host = new URL(normalized).hostname;
+    return host === "techcare-tawny.vercel.app" || host.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
 
 export function createApp() {
   const app = express();
@@ -25,7 +42,7 @@ export function createApp() {
   app.use(
     cors({
       origin(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (isAllowedOrigin(origin)) {
           callback(null, true);
           return;
         }

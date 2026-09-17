@@ -14,6 +14,7 @@ const app = createApp();
 
 const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`TECHCARE API escuchando en el puerto ${PORT}`);
+  console.log(`NODE_ENV=${process.env.NODE_ENV || "undefined"} FRONTEND_URL=${process.env.FRONTEND_URL || "(no definido)"}`);
 });
 
 server.on("error", (err: NodeJS.ErrnoException) => {

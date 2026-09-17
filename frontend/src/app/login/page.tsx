@@ -21,8 +21,16 @@ export default function LoginPage() {
     try {
       await login(email, password);
       router.push("/");
-    } catch {
-      setError("Email o contraseña incorrectos.");
+    } catch (err: unknown) {
+      const axiosErr = err as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      if (!axiosErr.response) {
+        setError("No hay conexión con el servidor. Verifica que el backend esté activo.");
+      } else {
+        setError(axiosErr.response.data?.message || "Email o contraseña incorrectos.");
+      }
     } finally {
       setLoading(false);
     }
@@ -31,9 +39,10 @@ export default function LoginPage() {
   return (
     <>
       <PublicHeader />
-      <main className="mx-auto max-w-sm px-6 py-20">
-        <h1 className="font-display text-3xl text-graphite mb-8">Ingresar</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <main className="mx-auto max-w-md px-6 py-16">
+        <p className="font-mono text-xs uppercase tracking-widest text-copper mb-2">acceso</p>
+        <h1 className="font-display text-3xl font-semibold text-graphite mb-8">Iniciar sesión</h1>
+        <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-lg p-6 flex flex-col gap-4">
           <div>
             <label className="text-sm font-medium text-graphite">Email</label>
             <input
@@ -41,7 +50,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border-2 border-graphite px-3 py-2 mt-1 ticket-notch"
+              className="w-full border border-slate-200 rounded-md px-3 py-2 mt-1 bg-steel-100/50"
             />
           </div>
           <div>
@@ -51,19 +60,19 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border-2 border-graphite px-3 py-2 mt-1 ticket-notch"
+              className="w-full border border-slate-200 rounded-md px-3 py-2 mt-1 bg-steel-100/50"
             />
           </div>
           {error && <p className="text-rust text-sm">{error}</p>}
-          <button
-            disabled={loading}
-            className="bg-copper text-white py-3 font-medium ticket-notch disabled:opacity-60"
-          >
-            {loading ? "Ingresando..." : "Ingresar"}
+          <button disabled={loading} className="btn-shop mt-1 disabled:opacity-60">
+            {loading ? "Validando…" : "Entrar"}
           </button>
         </form>
         <p className="text-sm text-steel mt-6">
-          ¿No tienes cuenta? <Link href="/registro" className="text-copper">Crear una</Link>
+          ¿No tienes cuenta?{" "}
+          <Link href="/registro" className="text-copper font-medium">
+            Crear una
+          </Link>
         </p>
       </main>
     </>

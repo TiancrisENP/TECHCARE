@@ -5,27 +5,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        graphite: "#1C2024",      // superficie oscura del dashboard
-        aluminum: "#EDEAE2",      // fondo tienda pública
-        copper: "#B5652D",        // acento principal
-        "copper-light": "#D68A4F",
-        solder: "#3C6E4F",        // verde placa: completado / aprobado
-        rust: "#C4432E",          // alerta / stock bajo / rechazo
-        steel: "#7C8B93",         // texto secundario / bordes
-        "steel-100": "#F1F2F3",
-        ink: "#15181B",
+        graphite: "#0B1220",
+        aluminum: "#EEF2F7",
+        copper: "#0284C7",
+        "copper-light": "#38BDF8",
+        solder: "#059669",
+        rust: "#E11D48",
+        steel: "#64748B",
+        "steel-100": "#F1F5F9",
+        ink: "#0F172A",
+        manila: "#E2E8F0",
+        cream: "#FFFFFF",
       },
       fontFamily: {
-        display: ["var(--font-display)", "sans-serif"],
-        body: ["var(--font-body)", "sans-serif"],
-        mono: ["var(--font-mono)", "monospace"],
+        display: ["var(--font-display)", "Segoe UI", "sans-serif"],
+        body: ["var(--font-body)", "Segoe UI", "sans-serif"],
+        note: ["var(--font-mono)", "ui-monospace", "monospace"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       borderRadius: {
-        ticket: "2px",
+        ticket: "8px",
       },
-      backgroundImage: {
-        perforation:
-          "radial-gradient(circle, transparent 2px, currentColor 2.2px, currentColor 2.6px, transparent 2.8px)",
+      boxShadow: {
+        paper: "0 1px 0 rgba(15, 23, 42, 0.06), 0 12px 28px -18px rgba(11, 18, 32, 0.35)",
+        lamp: "0 20px 40px -24px rgba(2, 132, 199, 0.35)",
       },
     },
   },

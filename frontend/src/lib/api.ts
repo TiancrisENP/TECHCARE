@@ -23,7 +23,9 @@ api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
+    const url = String(original?.url ?? "");
+    const isAuthEndpoint = /\/auth\/(login|register|refresh|logout)/.test(url);
+    if (error.response?.status === 401 && original && !original._retry && !isAuthEndpoint) {
       original._retry = true;
       try {
         const { data } = await api.post("/auth/refresh");

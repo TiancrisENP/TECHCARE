@@ -27,6 +27,10 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
     return res.status(err.status).json({ message: err.message });
   }
 
+  if (typeof err === "object" && err && "code" in err && (err as { code?: string }).code === "LIMIT_FILE_SIZE") {
+    return res.status(400).json({ message: "La imagen supera 5 MB." });
+  }
+
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === "P2022") {
       return res.status(500).json({

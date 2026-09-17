@@ -18,9 +18,9 @@ interface DashboardStats {
 
 function StatStamp({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
-    <div className={`border-2 ${accent || "border-graphite"} p-5 ticket-notch bg-white`}>
-      <p className="text-xs font-mono text-steel uppercase tracking-wide mb-2">{label}</p>
-      <p className={`font-display text-3xl ${accent ? accent.replace("border-", "text-") : "text-graphite"}`}>
+    <div className={`bg-white border p-5 rounded-lg ${accent || "border-slate-200"}`}>
+      <p className="font-mono text-[10px] uppercase tracking-widest text-steel mb-2">{label}</p>
+      <p className={`font-display text-3xl font-semibold ${accent ? accent.replace("border-", "text-") : "text-graphite"}`}>
         {value}
       </p>
     </div>
@@ -29,8 +29,8 @@ function StatStamp({ label, value, accent }: { label: string; value: string; acc
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border-2 border-graphite ticket-notch bg-white p-5">
-      <p className="font-mono text-xs text-steel uppercase mb-4">{title}</p>
+    <div className="bg-white border border-slate-200 rounded-lg p-5">
+      <p className="font-mono text-[10px] uppercase tracking-widest text-steel mb-4">{title}</p>
       <div className="h-64">{children}</div>
     </div>
   );
@@ -49,7 +49,8 @@ export default function DashboardHomePage() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl text-graphite mb-8">Resumen</h1>
+      <h1 className="font-display text-3xl font-semibold text-graphite mb-2">Resumen operativo</h1>
+      <p className="font-mono text-xs text-steel mb-8">ventas · stock · órdenes de servicio</p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         <StatStamp label="Ventas este mes" value={`$${(stats?.salesThisMonth ?? 0).toLocaleString("es-CO")}`} />
@@ -73,7 +74,7 @@ export default function DashboardHomePage() {
                 <XAxis dataKey="month" stroke="#7C8B93" fontSize={12} />
                 <YAxis stroke="#7C8B93" fontSize={12} />
                 <Tooltip formatter={(v: number) => `$${v.toLocaleString("es-CO")}`} />
-                <Line type="monotone" dataKey="total" stroke="#B5652D" strokeWidth={2} dot={{ fill: "#B5652D" }} />
+                <Line type="monotone" dataKey="total" stroke="#0284C7" strokeWidth={2} dot={{ fill: "#0284C7" }} />
               </LineChart>
             </ResponsiveContainer>
           )}
@@ -89,7 +90,7 @@ export default function DashboardHomePage() {
                 <XAxis type="number" stroke="#7C8B93" fontSize={12} />
                 <YAxis type="category" dataKey="product" stroke="#7C8B93" fontSize={11} width={120} />
                 <Tooltip />
-                <Bar dataKey="quantity" fill="#3C6E4F" />
+                <Bar dataKey="quantity" fill="#059669" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}

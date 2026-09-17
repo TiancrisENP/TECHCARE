@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Product, User, Warranty, WarrantyStatus } from "@/types";
+import { PhotoUploader } from "@/components/PhotoUploader";
 
 const STATUS_OPTIONS: WarrantyStatus[] = ["PENDIENTE", "EN_REVISION", "APROBADA", "RECHAZADA", "SOLUCIONADA"];
 
@@ -25,6 +26,7 @@ export default function GarantiasDashboardPage() {
   const [productId, setProductId] = useState("");
   const [problem, setProblem] = useState("");
   const [purchaseDate, setPurchaseDate] = useState("");
+  const [photoUrls, setPhotoUrls] = useState<string[]>([]);
 
   function load() {
     setLoading(true);
@@ -66,11 +68,13 @@ export default function GarantiasDashboardPage() {
         productId,
         problem,
         purchaseDate,
+        evidenceUrls: photoUrls,
       });
       setCustomerId("");
       setProductId("");
       setProblem("");
       setPurchaseDate("");
+      setPhotoUrls([]);
       load();
     } catch (err: any) {
       setError(err?.response?.data?.message || "No se pudo registrar la garantía.");
@@ -135,6 +139,9 @@ export default function GarantiasDashboardPage() {
               className="w-full border-2 border-graphite px-2 py-1.5 text-sm ticket-notch"
             />
           </div>
+          <div className="md:col-span-2">
+            <PhotoUploader folder="techcare/garantias" urls={photoUrls} onChange={setPhotoUrls} label="Evidencias (fotografías)" />
+          </div>
         </div>
         {error && <p className="text-rust text-sm mb-3">{error}</p>}
         <button
@@ -160,6 +167,14 @@ export default function GarantiasDashboardPage() {
                 Comprado: {new Date(w.purchaseDate).toLocaleDateString("es-CO")}
                 {w.customer?.name && <> · Cliente: {w.customer.name}</>}
               </p>
+              {w.evidence && w.evidence.length > 0 && (
+                <div className="flex gap-2 mt-2">
+                  {w.evidence.map((ev) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img key={ev.id} src={ev.imageUrl} alt="" className="h-12 w-12 object-cover rounded border" />
+                  ))}
+                </div>
+              )}
             </div>
             <span className={`text-xs font-mono px-2 py-1 border shrink-0 ${statusColor[w.status]}`}>
               {w.status.replace("_", " ")}

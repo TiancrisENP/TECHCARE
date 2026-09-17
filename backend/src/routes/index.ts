@@ -8,6 +8,7 @@ import userRoutes from "./user.routes";
 import dashboardRoutes from "./dashboard.routes";
 import auditRoutes from "./audit.routes";
 import socialRoutes from "./social.routes";
+import uploadRoutes from "./upload.routes";
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use("/users", userRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/audit", auditRoutes);
 router.use("/social-links", socialRoutes);
+router.use("/uploads", uploadRoutes);
 
 export default router;

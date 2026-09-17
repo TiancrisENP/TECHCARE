@@ -11,8 +11,9 @@ router.get("/track/:code", controller.trackService);
 router.use(requireAuth);
 
 router.get("/", controller.listServices);
+router.get("/:id/pdf", requireRole("ADMIN", "TECNICO", "VENDEDOR", "CLIENTE"), controller.downloadServicePdf);
 router.get("/:id", controller.getService);
-router.post("/", requireRole("ADMIN", "TECNICO", "CLIENTE"), controller.createService);
+router.post("/", requireRole("ADMIN", "TECNICO", "VENDEDOR", "CLIENTE"), controller.createService);
 router.put("/:id/status", requireRole("ADMIN", "TECNICO"), controller.updateServiceStatus);
 router.put("/:id/assign", requireRole("ADMIN"), controller.assignTechnician);
 router.put("/:id/diagnosis", requireRole("ADMIN", "TECNICO"), controller.setDiagnosis);

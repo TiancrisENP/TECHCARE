@@ -10,49 +10,93 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Borde perforado real: se usa como separador funcional entre pasos de estado,
-   no como decoración. Cada "diente" representa un paso en el proceso. */
+::selection {
+  background: #bae6fd;
+  color: #0b1220;
+}
+
+.shop-paper {
+  background-color: #eef2f7;
+  background-image:
+    linear-gradient(rgba(2, 132, 199, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(2, 132, 199, 0.05) 1px, transparent 1px),
+    radial-gradient(ellipse 800px 380px at 0% -10%, rgba(56, 189, 248, 0.16), transparent 55%);
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
 .perf-divider {
-  background-image: radial-gradient(
-    circle,
-    currentColor 1.6px,
-    transparent 1.8px
-  );
-  background-size: 14px 3px;
+  background-image: linear-gradient(to right, currentColor 0 8px, transparent 8px 14px);
+  background-size: 14px 1px;
   background-repeat: repeat-x;
-  background-position: center;
-  height: 3px;
+  height: 1px;
+  opacity: 0.35;
 }
 
 .perf-divider-v {
-  background-image: radial-gradient(
-    circle,
-    currentColor 1.6px,
-    transparent 1.8px
-  );
-  background-size: 3px 14px;
+  background-image: linear-gradient(to bottom, currentColor 0 8px, transparent 8px 14px);
+  background-size: 1px 14px;
   background-repeat: repeat-y;
-  background-position: center;
-  width: 3px;
+  width: 1px;
+  opacity: 0.35;
 }
 
-/* Ticket: esquina cortada tipo talonario, no border-radius genérico */
 .ticket-notch {
-  clip-path: polygon(
-    0 8px, 8px 0, calc(100% - 8px) 0, 100% 8px,
-    100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px)
-  );
+  clip-path: none;
+  border-radius: 8px;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06), 0 12px 28px -18px rgba(11, 18, 32, 0.35);
+}
+
+.btn-shop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0284c7;
+  color: #ffffff;
+  padding: 0.65rem 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: 8px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn-shop:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cbd5e1;
+  padding: 0.65rem 1.15rem;
+  font-weight: 600;
+  color: #0f172a;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+thead {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 :focus-visible {
-  outline: 2px solid #B5652D;
+  outline: 2px solid #0284c7;
   outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .btn-shop:hover {
+    transform: none;
   }
 }

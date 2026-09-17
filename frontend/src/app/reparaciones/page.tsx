@@ -16,26 +16,22 @@ export default function ReparacionesIndexPage() {
   return (
     <>
       <PublicHeader />
-      <main className="mx-auto max-w-2xl px-6 py-20">
-        <p className="font-mono text-xs text-copper mb-2">FORMATO: TRK-XXXXX</p>
-        <h1 className="font-display text-4xl text-graphite mb-4">
-          Sigue el estado de tu equipo
+      <main className="mx-auto max-w-2xl px-6 py-16">
+        <p className="font-mono text-xs uppercase tracking-widest text-copper mb-2">formato TRK-XXXXX</p>
+        <h1 className="font-display text-4xl font-semibold text-graphite mb-4">
+          Seguimiento de reparación
         </h1>
-        <p className="text-steel mb-8 max-w-md">
-          Ingresa el código que te dimos al recibir tu equipo para ver en qué
-          paso va la reparación.
+        <p className="text-ink/70 mb-8 max-w-md">
+          Ingresa el código de la orden de servicio para ver el estado del equipo.
         </p>
-        <form onSubmit={handleSubmit} className="flex gap-3">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
           <input
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="TRK-92831"
-            className="flex-1 border-2 border-graphite px-4 py-3 font-mono ticket-notch bg-white"
+            className="flex-1 bg-white border border-slate-200 rounded-md px-4 py-3 font-mono"
           />
-          <button
-            type="submit"
-            className="bg-copper text-white px-6 py-3 font-medium ticket-notch"
-          >
+          <button type="submit" className="btn-shop">
             Consultar
           </button>
         </form>

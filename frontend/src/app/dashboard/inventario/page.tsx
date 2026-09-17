@@ -13,6 +13,8 @@ export default function InventarioDashboardPage() {
   const [quantity, setQuantity] = useState("");
   const [type, setType] = useState<MovementType>("ENTRADA");
   const [reason, setReason] = useState("");
+  const [cost, setCost] = useState("");
+  const [supplier, setSupplier] = useState("");
   const [error, setError] = useState("");
 
   function load() {
@@ -26,6 +28,8 @@ export default function InventarioDashboardPage() {
     setOpenId(openId === id ? null : id);
     setQuantity("");
     setReason("");
+    setCost("");
+    setSupplier("");
     setType("ENTRADA");
     setError("");
   }
@@ -38,7 +42,13 @@ export default function InventarioDashboardPage() {
       return;
     }
     try {
-      await api.post(`/products/${id}/stock`, { quantity: qty, type, reason });
+      await api.post(`/products/${id}/stock`, {
+        quantity: qty,
+        type,
+        reason,
+        ...(type === "ENTRADA" && cost ? { cost: Number(cost) } : {}),
+        ...(type === "ENTRADA" && supplier.trim() ? { supplier: supplier.trim() } : {}),
+      });
       setOpenId(null);
       load();
     } catch (err: any) {
@@ -121,6 +131,30 @@ export default function InventarioDashboardPage() {
                               className="w-full border-2 border-graphite px-2 py-1.5 text-sm ticket-notch"
                             />
                           </div>
+                          {type === "ENTRADA" && (
+                            <>
+                              <div>
+                                <label className="block text-xs font-mono text-steel mb-1">Costo unitario</label>
+                                <input
+                                  type="number"
+                                  min={0}
+                                  value={cost}
+                                  onChange={(e) => setCost(e.target.value)}
+                                  placeholder={String(p.cost ?? "")}
+                                  className="w-32 border-2 border-graphite px-2 py-1.5 text-sm ticket-notch"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-mono text-steel mb-1">Proveedor</label>
+                                <input
+                                  value={supplier}
+                                  onChange={(e) => setSupplier(e.target.value)}
+                                  placeholder={p.supplier || "Quién envía la mercancía"}
+                                  className="w-48 border-2 border-graphite px-2 py-1.5 text-sm ticket-notch"
+                                />
+                              </div>
+                            </>
+                          )}
                           <button
                             onClick={() => submitMovement(p.id)}
                             className="bg-copper text-white px-4 py-2 text-sm font-medium ticket-notch"

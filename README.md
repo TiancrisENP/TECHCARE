@@ -77,12 +77,13 @@ las secciones a las que el rol no tiene acceso, en
 - **Venta**: carrito → checkout → `POST /api/orders` descuenta stock dentro
   de una transacción de Prisma (evita sobreventa) y registra el movimiento
   de inventario y el log de auditoría.
-- **Servicio técnico**: `POST /api/services` genera un código `TRK-XXXXX`.
-  Cada cambio de estado (`PUT /api/services/:id/status`) queda en
-  `ServiceStatusHistory`. El cliente consulta su equipo sin login en
-  `GET /api/services/track/:code`, reflejado en `/reparaciones/[tracking]`.
-- **Garantías**: `POST /api/warranties` con evidencia (URLs de imagen), y
-  cambio de estado por Admin/Técnico en `PUT /api/warranties/:id/status`.
+- **Servicio técnico**: recepción completa (cliente, equipo, marca, modelo, serial,
+  accesorios, estado físico, fotos en Cloudinary). `POST /api/services` genera
+  un código `TRK-XXXXXX`. PDF de orden, diagnóstico, factura y entrega en
+  `GET /api/services/:id/pdf?type=orden|diagnostico|factura|entrega`.
+  El cliente consulta sin login en `GET /api/services/track/:code`.
+- **Garantías**: el cliente/técnico sube fotografías reales a Cloudinary
+  (`POST /api/uploads`) y las URLs quedan en `WarrantyEvidence` (PostgreSQL).
 - **Auditoría**: toda mutación relevante llama a `recordAudit(...)`
   (`backend/src/utils/audit.ts`), guardando quién, qué acción, sobre qué
   entidad y el detalle (ej. stock `10 → 8`).

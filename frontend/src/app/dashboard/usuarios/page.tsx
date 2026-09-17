@@ -10,6 +10,7 @@ export default function UsuariosDashboardPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [loadError, setLoadError] = useState("");
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,7 +20,15 @@ export default function UsuariosDashboardPage() {
 
   function load() {
     setLoading(true);
-    api.get("/users").then((res) => setUsers(res.data)).finally(() => setLoading(false));
+    setLoadError("");
+    api
+      .get("/users")
+      .then((res) => setUsers(Array.isArray(res.data) ? res.data : []))
+      .catch((err: { response?: { data?: { message?: string } } }) => {
+        setUsers([]);
+        setLoadError(err?.response?.data?.message || "No se pudieron cargar los usuarios. ¿El backend está en marcha?");
+      })
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => { load(); }, []);
@@ -121,6 +130,7 @@ export default function UsuariosDashboardPage() {
       </form>
 
       <div className="border-2 border-graphite ticket-notch bg-white overflow-hidden">
+        {loadError && <p className="text-rust text-sm px-4 pt-4">{loadError}</p>}
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b-2 border-graphite text-left font-mono text-xs uppercase text-steel">

@@ -41,8 +41,12 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
   }
 
   if (err instanceof Prisma.PrismaClientValidationError) {
-    return res.status(400).json({
-      message: "No se pudo guardar el enlace. Revisa los datos o reinicia el API.",
+    console.error("Prisma validation:", err.message);
+    const missingDirect = /directUrl|DIRECT_URL|direct URL/i.test(err.message);
+    return res.status(500).json({
+      message: missingDirect
+        ? "Falta DIRECT_URL en Render (usa la URL de Supabase del puerto 5432, sin comillas)."
+        : "Error de Prisma al consultar la base de datos. Revisa DATABASE_URL y DIRECT_URL en Render (sin comillas).",
     });
   }
 

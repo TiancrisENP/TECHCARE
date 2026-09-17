@@ -20,14 +20,16 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      router.push("/");
+      router.push("/dashboard");
     } catch (err: unknown) {
       const axiosErr = err as {
-        response?: { data?: { message?: string } };
+        response?: { status?: number; data?: { message?: string } };
         message?: string;
       };
       if (!axiosErr.response) {
         setError("No hay conexión con el servidor. Verifica que el backend esté activo.");
+      } else if (axiosErr.response.status === 404) {
+        setError("El API no tiene la ruta de login. Reinicia el backend.");
       } else {
         setError(axiosErr.response.data?.message || "Email o contraseña incorrectos.");
       }

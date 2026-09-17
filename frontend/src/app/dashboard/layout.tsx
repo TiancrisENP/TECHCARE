@@ -66,12 +66,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             );
           })}
         </nav>
-        <button
-          onClick={logout}
-          className="px-5 py-4 text-left text-sm border-t border-white/10 text-aluminum/60 hover:text-white"
-        >
-          Cerrar sesión
-        </button>
+        <div className="border-t border-white/10">
+          <Link href="/" className="block px-5 py-3 text-sm text-copper-light hover:text-white">
+            ← Página principal
+          </Link>
+          <button
+            onClick={logout}
+            className="w-full px-5 py-4 text-left text-sm border-t border-white/10 text-aluminum/60 hover:text-white"
+          >
+            Cerrar sesión
+          </button>
+        </div>
       </aside>
       <main className="p-8 md:p-10">{children}</main>
     </div>

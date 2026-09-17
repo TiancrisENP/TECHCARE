@@ -30,6 +30,7 @@ api.interceptors.response.use(
       try {
         const { data } = await api.post("/auth/refresh");
         setAccessToken(data.accessToken);
+        original.headers = original.headers || {};
         original.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(original);
       } catch {
